@@ -32,6 +32,11 @@ pub struct CountDownLatch {
 
 impl CountDownLatch {
     /// A new `CountDownLatch`.
+     /// Creates a new `CountDownLatch` initialized with the given count.
+    ///
+    /// # Arguments
+    ///
+    /// * `count` - The number of times `count_down` must be called before waiters are released
     #[inline]
     pub fn new(count: u32) -> Self {
         CountDownLatch {
@@ -58,6 +63,16 @@ impl CountDownLatch {
         }
     }
 
+    /// Causes the current task to wait until the latch has counted down to zero,
+    /// or the specified timeout is reached.
+    ///
+    /// # Arguments
+    ///
+    /// * `timeout` - The maximum time to wait
+    ///
+    /// # Returns
+    ///
+    /// Returns `true` if the count reached zero, or `false` if the timeout was reached.
     #[inline]
     pub async fn wait_timeout(&self, timeout: Duration) -> bool {
         tokio::time::timeout(timeout, self.wait()).await.is_ok()
